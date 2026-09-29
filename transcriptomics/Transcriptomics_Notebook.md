@@ -307,7 +307,9 @@ summary(res_OWvsAM)
 
 ![](~/Projects/eco_genomics_2026/transcriptomics/myresults/heatmap.png)
 
-![](~/Projects/eco_genomics_2026/transcriptomics/myresults/volcano.png) **Notes/Observation**:
+![](~/Projects/eco_genomics_2026/transcriptomics/myresults/volcano.png)
+
+**Notes/Observation**:
 
 -   i got my stuff working again B)
 
