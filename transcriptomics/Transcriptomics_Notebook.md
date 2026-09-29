@@ -71,7 +71,6 @@ Print ("Hello World")
 
 ## 9.17.2026 - Diving into code
 
-
 -   learned zcat
 
 -   used vacc shell to check out data
@@ -96,7 +95,6 @@ or maybe
 
 `/gpfs1/cl/biol3990`
 
-
 **Output Files**:
 
 `/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
@@ -115,7 +113,7 @@ or maybe
 
 **Code**:
 
-``` [mboconno@vacc-login1 mboconno]$ cd /gpfs1/cl/biol3990
+\`\`\` [[mboconno\@vacc-login1](mailto:mboconno@vacc-login1){.email} mboconno]\$ cd /gpfs1/cl/biol3990
 
 **Code**:
 
@@ -203,6 +201,7 @@ wc: l: No such file or directory
 93638040 117047550 8504182762 total
 [mboconno@vacc-login1 CleanData]$ 
 ```
+
 # Transcriptomics Notebook
 
 **Course**: Intro Ecological Genomics - Fall 2026
@@ -213,12 +212,11 @@ wc: l: No such file or directory
 
 ## 9.24.2026 - review and fixing stuff
 
+-   fixed my project i thing
 
-- fixed my project i thing
+-   reviewed the code we've been learning
 
-- reviewed the code we've been learning
-
-- push notes to github
+-   push notes to github
 
 **Working Directory:**
 
@@ -254,4 +252,63 @@ wc: l: No such file or directory
 
 `figure out what went wrong with my stuff`
 
+# Transcriptomics Notebook
 
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 9.29.2026 - working with DESEQ day 2
+
+-   compared the different conditions
+
+-   made some graphs for each comparison
+
+-   volcano plot, heatmap, euler plot, upset plot
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/transcriptomics/mydata`
+
+**Input Files**:
+
+`none`
+
+**Output Files**:
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+**Scripts**:
+
+`\~/Projects/eco_genomics_2026/transcriptomics/myscripts`
+
+**Code**:
+
+``` r
+countsTable <- read.table("salmon.isoform.counts.matrix.filteredAssembly", header=TRUE, row.names=1)
+head(countsTable)
+dim(countsTable)
+countsTableRound <- round(countsTable) # bc DESeq2 doesn't like decimals (and Salmon outputs data with decimals)
+head(countsTableRound)
+
+res_OWvsAM <- results(dds_F0, name="treatment_OW_vs_AM", alpha=0.05)
+res_OWvsAM <- res_OWvsAM[order(res_OWvsAM$padj),]
+head(res_OWvsAM) 
+summary(res_OWvsAM)
+```
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myresults/Euler.png)
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myresults/heatmap.png)
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myresults/volcano.png) **Notes/Observation**:
+
+-   i got my stuff working again B)
+
+**Next Steps?**
