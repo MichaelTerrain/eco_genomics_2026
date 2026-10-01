@@ -202,6 +202,8 @@ wc: l: No such file or directory
 [mboconno@vacc-login1 CleanData]$ 
 ```
 
+------------------------------------------------------------------------
+
 # Transcriptomics Notebook
 
 **Course**: Intro Ecological Genomics - Fall 2026
@@ -251,6 +253,8 @@ wc: l: No such file or directory
 **Next Steps?**
 
 `figure out what went wrong with my stuff`
+
+------------------------------------------------------------------------
 
 # Transcriptomics Notebook
 
@@ -314,3 +318,68 @@ summary(res_OWvsAM)
 -   i got my stuff working again B)
 
 **Next Steps?**
+
+------------------------------------------------------------------------
+
+# Transcriptomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.01.2026 - DGEA wrap up, GO and maybe WGCNA analyses
+
+-   merge and mutate
+
+-   Create a Scatter plot
+
+-   Create a function to run a TopGO contrast
+
+-   push notes to github
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/transcriptomics/mydata`
+
+**Input Files**:
+
+`none`
+
+**Output Files**:
+
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
+
+`/Projects/eco_genomics_2026/transcriptomics/myscripts/9.29.26_AHUD_DESEQpt.r` **Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+**Scripts**:
+
+`none`
+
+**Code**:
+
+``` r
+filter() #to remove rows
+mutate() #to add a new variable
+case_when() #to classify genes into categories
+arrange() #to sort the rows
+```
+
+**Table/Graphs:**
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myresults/Scatter_plot.png)
+
+**Notes/Observation**:
+
+-   Graph stuff
+
+**Next Steps?**
+
+------------------------------------------------------------------------
+
+# 
