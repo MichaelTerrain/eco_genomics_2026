@@ -307,11 +307,11 @@ head(res_OWvsAM)
 summary(res_OWvsAM)
 ```
 
-![](~/Projects/eco_genomics_2026/transcriptomics/myresults/Euler.png)
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/Euler.png)
 
-![](~/Projects/eco_genomics_2026/transcriptomics/myresults/heatmap.png)
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/heatmap.png)
 
-![](~/Projects/eco_genomics_2026/transcriptomics/myresults/volcano.png)
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/volcano.png)
 
 **Notes/Observation**:
 
@@ -374,7 +374,7 @@ arrange() #to sort the rows
 
 **Table/Graphs:**
 
-![](~/Projects/eco_genomics_2026/transcriptomics/myresults/Scatter_plot.png)
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/Scatter_plot.png)
 
 **Notes/Observation**:
 
@@ -414,7 +414,7 @@ arrange() #to sort the rows
 
 `/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
 
-`/Projects/eco_genomics_2026/transcriptomics/myscripts/9.29.26_AHUD_DESEQpt.r`
+`/Projects/eco_genomics_2026/transcriptomics/myscripts/10.06.26_AHUD_GoandMaybe.r`
 
 **Programs and dependencies**:
 
@@ -429,6 +429,129 @@ arrange() #to sort the rows
 **Code**:
 
 ``` r
+## Set your working directory
+setwd("/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics")
+
+## Import the libraries that we're likely to need in this session
+
+library(DESeq2)
+library(dplyr)
+library(tidyr)
+library(ggplot2)
+library(scales)
+library(ggpubr)
+library(wesanderson)
+library(vsn)  
+
+####################################################
+
+### Import our data
+
+####################################################
+
+
+# Import the counts matrix
+countsTable <- read.table("salmon.isoform.counts.matrix.filteredAssembly", header=TRUE, row.names=1)
+head(countsTable)
+dim(countsTable)
+
+countsTableRound <- round(countsTable) # bc DESeq2 doesn't like decimals (and Salmon outputs data with decimals)
+head(countsTableRound)
+
+#import the sample description table
+conds <- read.delim("ahud_samples_R.txt", header=TRUE, stringsAsFactors = TRUE, row.names=1)
+head(conds)
+
+
+dds <- DESeqDataSetFromMatrix(countData = countsTableRound, colData=conds, 
+                              design= ~ treatment)
+
+dim(dds)
+# [1] 130580     38
+
+# Filter 
+dds <- dds[rowSums(counts(dds) >= 15) >= 28,]
+nrow(dds) 
+
+# Subset the DESeqDataSet to the specific level of the "generation" factor
+dds_F0 <- subset(dds, select = generation == 'F0')
+dim(dds_F0)
+# [1] 25260    12
+
+# Perform DESeq2 analysis on the subset
+dds_F0 <- DESeq(dds_F0)
+
+
+resultsNames(dds_F0)
+# [1] "Intercept"           "treatment_OA_vs_AM"  "treatment_OW_vs_AM"  "treatment_OWA_vs_AM"
+
+res_OWAvsAM <- results(dds_F0, name="treatment_OWA_vs_AM", alpha=0.05)
+res_OWAvsAM <- res_OWAvsAM[order(res_OWAvsAM$padj),]
+head(res_OWAvsAM)  
+summary(res_OWAvsAM)
+
+
+res_OWvsAM <- results(dds_F0, name="treatment_OW_vs_AM", alpha=0.05)
+res_OWvsAM <- res_OWvsAM[order(res_OWvsAM$padj),]
+head(res_OWvsAM) 
+summary(res_OWvsAM)
+
+res_OAvsAM <- results(dds_F0, name="treatment_OA_vs_AM", alpha=0.05)
+res_OAvsAM <- res_OAvsAM[order(res_OAvsAM$padj),]
+head(res_OAvsAM) 
+summary(res_OAvsAM)
+
+
+res_OWAvsAM.df <- as.data.frame(res_OWAvsAM)
+res_OWAvsAM.df$fullID <- rownames(res_OWAvsAM.df)
+
+parts <- strsplit(res_OWAvsAM.df$fullID, "::")
+
+res_OWAvsAM.df$shortID <- sapply(
+  parts,
+  function(x) paste(x[1:2], collapse="::")
+)
+
+write.csv(
+  res_OWAvsAM.df,
+  "myresults/F0_OWAvsAM_results.csv",
+  row.names = FALSE
+)
+
+res_OWvsAM.df <- as.data.frame(res_OWvsAM)
+res_OWvsAM.df$fullID <- rownames(res_OWvsAM.df)
+
+parts <- strsplit(res_OWvsAM.df$fullID, "::")
+
+res_OWvsAM.df$shortID <- sapply(
+  parts,
+  function(x) paste(x[1:2], collapse="::")
+)
+
+write.csv(
+  res_OWvsAM.df,
+  "myresults/F0_OWvsAM_results.csv",
+  row.names = FALSE
+)
+
+res_OAvsAM.df <- as.data.frame(res_OAvsAM)
+res_OAvsAM.df$fullID <- rownames(res_OAvsAM.df)
+
+parts <- strsplit(res_OAvsAM.df$fullID, "::")
+
+res_OAvsAM.df$shortID <- sapply(
+  parts,
+  function(x) paste(x[1:2], collapse="::")
+)
+
+write.csv(
+  res_OAvsAM.df,
+  "myresults/F0_OAvsAM_results.csv",
+  row.names = FALSE
+)
+
+
+
 run_topGO_contrast <- function(
     infile,
     outfile,
@@ -488,9 +611,27 @@ run_topGO_contrast <- function(
 
   return(GOresults)
 }
+GO_OA <- run_topGO_contrast(
+  "myresults/F0_OAvsAM_results.csv",
+  "myresults/GO_F0_OAvsAM_BP.csv"
+)
+
+GO_OW <- run_topGO_contrast(
+  "myresults/F0_OWvsAM_results.csv",
+  "myresults/GO_F0_OWvsAM_BP.csv"
+)
+
+GO_OWA <- run_topGO_contrast(
+  "myresults/F0_OWAvsAM_results.csv",
+  "myresults/GO_F0_OWAvsAM_BP.csv"
+)
+
+head(GO_OA)
 ```
 
 **Table:**
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/Bubbleplot.png) ![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/bubble%20owam.png) ![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/bubble%20oaam.png)
 
 **Notes/Observation**:
 
