@@ -338,7 +338,7 @@ res_OWAvsAM.df$shortID <- sapply(
 
 write.csv(
   res_OWAvsAM.df,
-  "myresults/OWAvsAM_results.csv",
+  "/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/mydata/myresults/OWAvsAM_results.csv",
   row.names = FALSE
 )
 
@@ -354,7 +354,7 @@ res_OWvsAM.df$shortID <- sapply(
 
 write.csv(
   res_OWvsAM.df,
-  "myresults/OWvsAM_results.csv",
+  "/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/myresults/OWvsAM_results.csv",
   row.names = FALSE
 )
 
@@ -368,9 +368,14 @@ res_OAvsAM.df$shortID <- sapply(
   function(x) paste(x[1:2], collapse="::")
 )
 #10/6
+
+if (!require("BiocManager", quietly = TRUE))
+  install.packages("BiocManager")
+
+BiocManager::install("topGO")
 write.csv(
   res_OAvsAM.df,
-  "myresults/OAvsAM_results.csv",
+  "/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/mydata/myresults/OAvsAM_results.csv",
   row.names = FALSE
 )
 
