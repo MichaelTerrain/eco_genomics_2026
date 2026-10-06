@@ -274,7 +274,7 @@ wc: l: No such file or directory
 
 **Working Directory:**
 
-`~/Projects/eco_genomics_2026/transcriptomics/mydata`
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/mydata`
 
 **Input Files**:
 
@@ -341,7 +341,7 @@ summary(res_OWvsAM)
 
 **Working Directory:**
 
-`~/Projects/eco_genomics_2026/transcriptomics/mydata`
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/mydata`
 
 **Input Files**:
 
@@ -351,7 +351,9 @@ summary(res_OWvsAM)
 
 `/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
 
-`/Projects/eco_genomics_2026/transcriptomics/myscripts/9.29.26_AHUD_DESEQpt.r` **Programs and dependencies**:
+`/Projects/eco_genomics_2026/transcriptomics/myscripts/9.29.26_AHUD_DESEQpt.r`
+
+**Programs and dependencies**:
 
 -   `R Version 4.5.1-tidyverse`
 
@@ -373,6 +375,122 @@ arrange() #to sort the rows
 **Table/Graphs:**
 
 ![](~/Projects/eco_genomics_2026/transcriptomics/myresults/Scatter_plot.png)
+
+**Notes/Observation**:
+
+-   Graph stuff
+
+**Next Steps?**
+
+------------------------------------------------------------------------
+
+# Transcriptomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.06.2026 - Setting up lab notebook and learning markdown
+
+-   test for functional enrichment using annotated GO categories for each gene and the TopGO program.
+
+-   Make bubble plot
+
+-   Weighted Gene Correlation Network Analyses
+
+-   push notes to github
+
+**Working Directory:**
+
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/mydata`
+
+**Input Files**:
+
+`none`
+
+**Output Files**:
+
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
+
+`/Projects/eco_genomics_2026/transcriptomics/myscripts/9.29.26_AHUD_DESEQpt.r`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+**Scripts**:
+
+`none`
+
+**Code**:
+
+``` r
+run_topGO_contrast <- function(
+    infile,
+    outfile,
+    ontology = "BP",
+    padj.cutoff = 0.05){
+
+  deseq <- read.csv(
+    infile,
+    stringsAsFactors = FALSE
+  )
+
+  deseq <- subset(
+    deseq,
+    !is.na(padj)
+  )
+
+  geneList <- factor(
+    as.integer(deseq$padj < padj.cutoff)
+  )
+
+  names(geneList) <- deseq$shortID
+
+  cat("\nGenes tested:",
+      length(geneList))
+
+  cat("\nSignificant genes:",
+      sum(geneList == 1),
+      "\n")
+
+  GOdata <- new(
+    "topGOdata",
+    ontology = ontology,
+    allGenes = geneList,
+    geneSelectionFun = function(x) x == 1,
+    annot = annFUN.gene2GO,
+    gene2GO = geneID2GO.filtered
+  )
+
+  resultWeight <- runTest(
+    GOdata,
+    algorithm = "weight01",
+    statistic = "fisher"
+  )
+
+  GOresults <- GenTable(
+    GOdata,
+    weightFisher = resultWeight,
+    orderBy = "weightFisher",
+    topNodes = 100
+  )
+
+  write.csv(
+    GOresults,
+    outfile,
+    row.names = FALSE
+  )
+
+  return(GOresults)
+}
+```
+
+**Table:**
 
 **Notes/Observation**:
 

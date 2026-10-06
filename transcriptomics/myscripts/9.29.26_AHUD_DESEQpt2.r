@@ -367,9 +367,24 @@ res_OAvsAM.df$shortID <- sapply(
   parts,
   function(x) paste(x[1:2], collapse="::")
 )
-
+#10/6
 write.csv(
   res_OAvsAM.df,
   "myresults/OAvsAM_results.csv",
   row.names = FALSE
+)
+
+GO_OA <- run_topGO_contrast(
+  "myresults/OAvsAM_results.csv",
+  "myresults/GO_OAvsAM_BP.csv"
+)
+
+GO_OW <- run_topGO_contrast(
+  "myresults/OWvsAM_results.csv",
+  "myresults/GO_OWvsAM_BP.csv"
+)
+
+GO_OWA <- run_topGO_contrast(
+  "myresults/OWAvsAM_results.csv",
+  "myresults/GO_OWAvsAM_BP.csv"
 )
