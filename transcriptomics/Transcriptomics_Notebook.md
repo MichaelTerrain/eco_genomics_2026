@@ -641,4 +641,67 @@ head(GO_OA)
 
 ------------------------------------------------------------------------
 
-# 
+# Transcriptomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.08.2026 - WGCNA
+
+-   cluster dendrogram
+
+-   other graphs
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/transcriptomics/mydata`
+
+**Input Files**:
+
+`none`
+
+**Output Files**:
+
+`/gpfs1/home/m/b/mboconno/Projects/eco_genomics_2026/transcriptomics/Transcriptomics.notebook.md`
+
+`/Projects/eco_genomics_2026/transcriptomics/WGCNA.R`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+**Scripts**:
+
+\`\`
+
+**Code**:
+
+``` r
+bwnet <- blockwiseModules(norm.counts,
+                          maxBlockSize = 26000,
+                          minModuleSize = 30, 
+                          reassignThreshold=0,
+                          TOMType = "signed",
+                          power = soft_power,
+                          mergeCutHeight = 0.25,
+                          numericLabels = F,
+                          randomSeed = 1234,
+                          verbose = 3)
+```
+
+**Table:**
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/clusterden.png)
+
+![](~/Projects/eco_genomics_2026/transcriptomics/myfigures/Rplot%20trinity.png) **Notes/Observation**:
+
+-   
+
+**Next Steps?**
+
+------------------------------------------------------------------------
