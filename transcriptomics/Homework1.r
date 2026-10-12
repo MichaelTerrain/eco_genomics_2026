@@ -132,11 +132,51 @@ p_add <- ggplot(lfc, aes(expected, observed)) +
   theme_bw()
 print(p_add)
 
-# Slope of observed vs expected per generation (1 = additive, <1 = antagonistic/sub-additive, >1 = synergistic)
-lfc |> group_by(generation) |>
+# Slope of observed vs expected 
+stats <- lfc |>
+  group_by(generation) |>
   summarise(slope = coef(lm(observed ~ expected))[2],
-            r = cor(observed, expected))
+            r     = cor(observed, expected),
+            n     = n(),
+            .groups = "drop") |>
+  mutate(label = sprintf("slope = %.2f\nr = %.2f\nn = %s",
+                         slope, r, format(n, big.mark = ",")))
+
+print(stats) 
+
+p_add <- ggplot(lfc, aes(expected, observed)) +
+  geom_point(alpha = 0.25, size = 0.8) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  geom_smooth(method = "lm", se = FALSE, color = "blue") +
+  geom_text(data = stats, aes(label = label),
+            x = -Inf, y = Inf, hjust = -0.1, vjust = 1.2,
+            inherit.aes = FALSE, size = 3.5) +
+  facet_wrap(~ generation) +
+  labs(x = "Expected additive log2FC (OA + OW)",
+       y = "Observed log2FC (OWA)") +
+  theme_bw()
+
+print(p_add)
 
 ggsave("~/Projects/eco_genomics_2026/transcriptomics/myfigures/PCA.png", p_pca, width = 6, height = 5, dpi = 300, bg = "white")
 ggsave("~/Projects/eco_genomics_2026/transcriptomics/myfigures/DEG_up_down.png", p_deg, width = 7, height = 4, dpi = 300, bg = "white")
 ggsave("~/Projects/eco_genomics_2026/transcriptomics/myfigures/observed_vs_expected.png", p_add, width = 9, height = 4.5, dpi = 300, bg = "white")
+
+tested <- all_res |>
+  filter(generation %in% c("F0", "F4")) |>
+  group_by(generation, contrast) |>
+  summarise(n_tested = n(), .groups = "drop")
+
+table1 <- deg_summary |>
+  filter(generation %in% c("F0", "F4")) |>
+  left_join(tested, by = c("generation", "contrast")) |>
+  mutate(pct_DEG = round(100 * n_DEG / n_tested, 1),
+         contrast = factor(contrast, levels = c("OA_vs_AM", "OW_vs_AM", "OWA_vs_AM"))) |>
+  arrange(generation, contrast) |>
+  select(Generation = generation, Contrast = contrast,
+         `Transcripts tested` = n_tested,
+         `DEGs` = n_DEG, Up = n_up, Down = n_down, `% DEGs` = pct_DEG)
+
+print(table1)
+write.csv(table1, "Table1_DEG_summary.csv", row.names = FALSE)
+
