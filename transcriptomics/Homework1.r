@@ -180,3 +180,37 @@ table1 <- deg_summary |>
 print(table1)
 write.csv(table1, "Table1_DEG_summary.csv", row.names = FALSE)
 
+meta$acid <- factor(ifelse(meta$treatment %in% c("OA", "OWA"), "yes", "no"), levels = c("no", "yes"))
+meta$warm <- factor(ifelse(meta$treatment %in% c("OW", "OWA"), "yes", "no"), levels = c("no", "yes"))
+
+run_interaction <- function(gen) {
+  s <- rownames(meta)[which(meta$generation == gen)]
+  dds <- DESeqDataSetFromMatrix(counts[, s], droplevels(meta[s, ]),
+                                design = ~ acid + warm + acid:warm)
+  dds <- dds[rowSums(counts(dds) >= 10) >= 3, ]
+  dds <- DESeq(dds)
+  print(resultsNames(dds))
+  
+  cf <- coef(dds)
+  results(dds, name = "acidyes.warmyes", alpha = padj_cut) |>
+    as.data.frame() |> rownames_to_column("gene") |>
+    mutate(expected_add = cf[gene, "acid_yes_vs_no"] + cf[gene, "warm_yes_vs_no"],
+           generation = gen,
+           class = case_when(
+             !is.na(padj) & padj < padj_cut & sign(log2FoldChange) == sign(expected_add) ~ "synergistic",
+             !is.na(padj) & padj < padj_cut & sign(log2FoldChange) != sign(expected_add) ~ "antagonistic",
+             TRUE ~ "not significant"))
+}
+
+int_res <- bind_rows(lapply(c("F0", "F4"), run_interaction))
+
+int_summary <- int_res |>
+  group_by(generation) |>
+  summarise(n_tested = n(),
+            n_sig = sum(class != "not significant"),
+            n_synergistic = sum(class == "synergistic"),
+            n_antagonistic = sum(class == "antagonistic"),
+            .groups = "drop")
+print(int_summary)
+
+
