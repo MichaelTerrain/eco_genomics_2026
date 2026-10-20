@@ -127,3 +127,55 @@ vcftools --gzvcf Lottia_gigantea_pl_flt3.renamed.vcf.gz --depth --out depth_data
 -   vacc is difficult
 
 **Next Steps?**
+
+------------------------------------------------------------------------
+
+## 10.15.2026 - Population structure
+
+-   move files from vacc... again
+
+-   made DATA_DIR
+
+-   CV stuff
+
+-   push notes to github
+
+-   Submitted batch job 5963708
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata`
+
+**Input Files**:
+
+`Lg_LD_0.2`
+
+**Output Files**:
+
+`~/Projects/eco_genomics_2026/population_genomics/Population_genomics_Transcriptomics.notebook.md`
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata/PopulationStructure`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+-   `VACC`
+
+-   `PLINK v1.9.0-b.7.7 64-bit (22 Oct 2024)`
+
+**Code**:
+
+``` r
+DATA_DIR=~/Projects/eco_genomics_2026/population_genomics/mydata
+```
+
+**Table:**
+
+**Notes/Observation**:
+
+-   vacc is difficult
+
+**Next Steps?**
