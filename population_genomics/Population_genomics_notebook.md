@@ -179,3 +179,93 @@ DATA_DIR=~/Projects/eco_genomics_2026/population_genomics/mydata
 -   vacc is difficult
 
 **Next Steps?**
+
+# Population Genomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.22.2026 - Genetic Diversity
+
+-   
+
+-   
+
+-   push notes to github
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata`
+
+**Input Files**:
+
+`sample_metadata.csv`
+
+**Output Files**:
+
+`~/Projects/eco_genomics_2026/population_genomics/Population_genomics_Transcriptomics.notebook.md`
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata/myresults/pi`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+-   `vcftools/0.1.16`
+
+**Code**:
+
+``` r
+dir.create(paste0(OUTDIR,"/TajD"))
+
+
+taj_files <- list.files("TajD", pattern = "Tajima.D$", full.names = TRUE)
+
+tajd <- taj_files %>%
+  set_names(str_remove(basename(taj_files), fixed(".Tajima.D"))) %>%
+  # vcftools writes "nan" when D can't be calculated, so treat that as missing (NA)
+  map_dfr(read_tsv, .id = "Population", na = c("", "NA", "nan", "-nan"),
+          show_col_types = FALSE) %>%
+  filter(N_SNPS >= 5) %>%   # drop windows with too few SNPs to be reliable
+  left_join(sites, by = "Population") %>%
+  mutate(Site = fct_reorder(Population, Latitude))
+
+tajd %>%
+  group_by(Site) %>%
+  summarise(n_windows = n(),
+            mean_D    = mean(TajimaD, na.rm = TRUE),
+            median_D  = median(TajimaD, na.rm = TRUE))
+
+tajd_plot <- ggplot(tajd, aes(Site, TajimaD, fill = Site)) +
+  geom_hline(yintercept = 0, linetype = "dashed") +
+  geom_violin() +
+  geom_boxplot(width = 0.15, fill = "white", outlier.shape = NA) +
+  scale_fill_viridis_d(end = 0.9) +
+  labs(x = "Site", y = "Tajima's D") +
+  theme_classic() +
+  theme(legend.position = "none")+
+  coord_flip()
+
+ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4, height = 7)
+```
+
+**Figures:**
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/pi/pi_by_site.png)
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/pi/pi_vs_latitude.png)
+
+**Notes/Observation**:
+
+-   vacc is difficult
+
+**Next Steps?**
+
+------------------------------------------------------------------------
+
+# 
