@@ -268,4 +268,58 @@ ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4
 
 ------------------------------------------------------------------------
 
-# 
+# # Population Genomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.27.2026 - Genetic Diversity p2 and Signatures of selection
+
+-   finish code from yesterday
+
+-  Fst and such on vacc 
+
+-   push notes to github
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata`
+
+**Input Files**:
+
+`sample_metadata.csv`
+
+**Output Files**:
+
+`~/Projects/eco_genomics_2026/population_genomics/Population_genomics_Transcriptomics.notebook.md`
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata/myresults/pi`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+-   `vcftools/0.1.16`
+
+**Code**:
+
+``` r
+
+```
+
+**Figures:**
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/pi/pi_along_scaffold.png)
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/pi/pi_scaffold_facet.png)
+
+**Notes/Observation**:
+
+-   its tuesday
+
+**Next Steps?**
