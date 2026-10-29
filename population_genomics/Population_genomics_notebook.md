@@ -268,7 +268,7 @@ ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4
 
 ------------------------------------------------------------------------
 
-# # Population Genomics Notebook
+# \# Population Genomics Notebook
 
 **Course**: Intro Ecological Genomics - Fall 2026
 
@@ -280,7 +280,7 @@ ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4
 
 -   finish code from yesterday
 
--  Fst and such on vacc 
+-   Fst and such on vacc
 
 -   push notes to github
 
@@ -309,7 +309,6 @@ ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4
 **Code**:
 
 ``` r
-
 ```
 
 **Figures:**
@@ -321,5 +320,82 @@ ggsave(paste0(OUTDIR, "/TajD/tajimasD_by_site.png"), plot = tajd_plot, width = 4
 **Notes/Observation**:
 
 -   its tuesday
+
+**Next Steps?**
+
+------------------------------------------------------------------------
+
+# \# Population Genomics Notebook
+
+**Course**: Intro Ecological Genomics - Fall 2026
+
+**Name**: Michael O'Connor
+
+------------------------------------------------------------------------
+
+## 10.29.2026 - Signatures of selection
+
+-   Fst stuff
+
+-   BayPass
+
+-   push notes to github
+
+**Working Directory:**
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata`
+
+**Input Files**:
+
+`some fst stuff`
+
+**Output Files**:
+
+`~/Projects/eco_genomics_2026/population_genomics/Population_genomics_Transcriptomics.notebook.md`
+
+`~/Projects/eco_genomics_2026/population_genomics/mydata/myresults/`
+
+**Programs and dependencies**:
+
+-   `R Version 4.5.1-tidyverse`
+
+-   `R-Studio`
+
+-   `vcftools/0.1.16`
+
+**Code**:
+
+``` r
+omega_df <- as.data.frame(as.table(omega_cor)) %>%
+  rename(pop1 = Var1, pop2 = Var2, correlation = Freq) %>%
+  mutate(pop1 = factor(pop1, levels = pop_order),
+         pop2 = factor(pop2, levels = pop_order))
+
+###if you get any errors for visuals, try dev.off()
+ggplot(omega_df, aes(x = pop1, y = pop2, fill = correlation)) +
+  geom_tile(colour = "white") +
+  scale_fill_gradient2(low = "cadetblue", mid = "white", high = "red4",
+                       midpoint = 0, limits = c(-1, 1)) +
+  labs(x = NULL, y = NULL,
+       title = "BayPass Omega as correlations (psouth to north)") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+ggsave(paste0(OUTDIR,"/baypass_omega.png"), width = 7, height = 6)
+```
+
+**Figures:**
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/baypass_omega_tree.png)
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/baypass_omega.png)
+
+![](~/Projects/eco_genomics_2026/population_genomics/myfigures/.png)
+
+**Notes/Observation**:
+
+-   its thursday
+
+-   psouth
 
 **Next Steps?**
